@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+            width: 300px;
+            height: 300px;
+            background-color: red;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .top,
+        .mid,
+        .bottom {
+            display: flex;
+            justify-content: space-around;
+            background-color: red
+        }
+
+        .item {
+            width: 70px;
+            height: 70px;
+            background-color: aliceblue;
+            display: flex;
+            user-select: none;
+            border-radius: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .active {
+            background-color: yellow;
+        }
+
+        .btn:hover {
+            cursor: pointer;
+
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="top">
+            <div class="item  one">1</div>
+            <div class="item two">2</div>
+            <div class="item three">3</div>
+        </div>
+        <div class="mid">
+            <div class="item four">4</div>
+            <div class="item btn">开始抽奖</div>
+            <div class="item six">6</div>
+        </div>
+        <div class="bottom">
+            <div class="item seven">7</div>
+            <div class="item eight">8</div>
+            <div class="item nine">9</div>
+        </div>
+
+    </div>
+    <script>
+        let btn = document.querySelector('.btn')
+        let map = ['one', 'two', 'three', 'six', 'nine', 'eight', 'seven', 'four']
+        let ele = [], sId = 0, flag = false
+        function clearActive(ele) {
+            ele.forEach(node => node.classList.remove('active'))
+        }
+        btn.onclick = function () {
+            if (!flag) {
+                let timer = 100
+                flag = true
+                console.log("你好")
+                let random = 0
+                while (true) {
+                    random = parseInt(Math.random() * 10)
+                    if (random != 5 && random <= 7) {
+                        break
+                    }
+                }
+                console.log(random)
+                if (ele.length == 0) {
+                    for (let i = 0; i < 9; i++) {
+                        let temp = document.querySelector('.' + map[i])
+                        if (temp) ele.push(temp)
+                    }
+                    console.log("执行次数", ele);
+                } else {
+                    clearActive(ele)
+                }
+                let p = new Promise((resolve, reject) => {
+                    let count = 0, circleNum = 0, targetNum = 3 * 7 + random
+                    sId = setInterval(() => {
+                        if (ele[(count - 1) % 8]) ele[(count - 1) % 8].classList.remove('active')
+                        ele[count % 8].classList.add('active')
+                        count++
+                        if (count == targetNum) {
+                            resolve()
+                        }
+                    }, timer)
+                })
+                p.then(() => {
+                    clearInterval(sId)
+                    flag = false
+                })
+            }
+        }
+    </script>
+</body>
+
+</html>
